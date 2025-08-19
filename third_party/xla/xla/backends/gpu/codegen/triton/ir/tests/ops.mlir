@@ -10,8 +10,8 @@
 tt.func @xla_triton_extract(%src: !tt.ptr<bf16>, %i : index) -> tensor<16x64xbf16> {
   // CHECK: triton_xla.extract
   %extracted_tensor = triton_xla.extract from %src
-    as memref<512x128xbf16, #triton_xla.layout<[1, 0]>>
-    [0, %i] [16, 64] [128, 1] : tensor<16x64xbf16>
+    as memref<512x1x128xbf16, #triton_xla.layout<[2, 1, 0]>>
+    [0, 0, %i] [16, 1, 64] [128, 1, 1] : tensor<16x64xbf16>
   tt.return %extracted_tensor : tensor<16x64xbf16>
 }
 
