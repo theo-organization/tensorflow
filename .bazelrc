@@ -165,6 +165,7 @@ build --repo_env USE_HERMETIC_CC_TOOLCHAIN=1
 # TODO: Migrate for https://github.com/bazelbuild/bazel/issues/7260
 build:clang_local --noincompatible_enable_cc_toolchain_resolution
 build:clang_local --noincompatible_enable_android_toolchain_resolution
+build:clang_local --@rules_ml_toolchain//common:enable_hermetic_cc=False
 build:clang_local --repo_env USE_HERMETIC_CC_TOOLCHAIN=0
 
 # Print a stacktrace when a test is killed
@@ -761,13 +762,17 @@ build:release_gpu_linux_clang_local --config=release_cpu_linux_clang_local
 
 build:release_arm64_linux --config=release_linux_base
 build:release_arm64_linux --config=linux_arm64
-build:release_arm64_linux --config=clang_local
-build:release_arm64_linux --repo_env=CC="/usr/lib/llvm-18/bin/clang"
-build:release_arm64_linux --repo_env=BAZEL_COMPILER="/usr/lib/llvm-18/bin/clang"
-build:release_arm64_linux --crosstool_top="@ml2014_clang_aarch64_config_aarch64//crosstool:toolchain"
 build:release_arm64_linux --config=mkl_aarch64_threadpool
 build:release_arm64_linux --copt=-flax-vector-conversions
 test:release_arm64_linux --flaky_test_attempts=3
+
+# Deprecated release CPU config with non-hermetic toolchains.
+build:release_arm64_linux_clang_local --config=release_arm64_linux
+build:release_arm64_linux_clang_local --config=clang_local
+build:release_arm64_linux_clang_local --repo_env=CC="/usr/lib/llvm-18/bin/clang"
+build:release_arm64_linux_clang_local --repo_env=BAZEL_COMPILER="/usr/lib/llvm-18/bin/clang"
+build:release_arm64_linux_clang_local --crosstool_top="@ml2014_clang_aarch64_config_aarch64//crosstool:toolchain"
+test:release_arm64_linux_clang_local --flaky_test_attempts=3
 
 build:release_cpu_macos --config=avx_linux
 
